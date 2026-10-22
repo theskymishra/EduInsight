@@ -1,111 +1,201 @@
-# EduInsight — Student Performance Analytics
+# EduInsight — Student Performance Analytics System
 
-EduInsight is a student performance analytics dashboard built to explore academic records, identify students who may need additional support, and visualize educational data through an interactive web interface.
+EduInsight is a web-based student performance analytics application designed to explore student records, analyze academic performance, visualize educational data, and identify students who may be at academic risk.
 
-## Screenshots
+The application uses React for the frontend, FastAPI for the backend, and MongoDB Atlas for cloud database storage.
 
-### Dashboard
-![EduInsight Dashboard](screenshots/dashboard.png)
+## Live Deployment
 
-### Analytics
-![EduInsight Analytics](screenshots/analytics.png)
+- **Live Website:** https://eduinsight-frontend.onrender.com
+- **Backend API:** https://eduinsight-api.onrender.com
+- **API Health Check:** https://eduinsight-api.onrender.com/api/health
+- **Interactive API Documentation:** https://eduinsight-api.onrender.com/docs
 
-### Dark Mode
-![EduInsight Dark Mode](screenshots/dark-mode.png)
+The frontend and backend are deployed on Render, and student data is stored in MongoDB Atlas.
 
 ## Features
 
-- **Dashboard:** View total students, average final grade, average absences, and students at risk.
-- **Student Records:** Browse student information in a searchable, filterable table.
-- **Student Management:** Add student records and delete eligible records.
-- **Data Visualization:** Explore grade distributions and study-time performance using charts.
-- **Analytics:** View aggregated academic performance insights.
+- **Dashboard:** Displays key statistics about student performance.
+- **Student Records:** View and manage student information.
+- **Search and Filtering:** Find student records using available search and filter options.
+- **Academic Analytics:** Visualize grade distributions and study-related performance patterns.
+- **At-Risk Student Identification:** Identify students who may require additional academic support.
+- **Student Management:** Add and delete student records.
 - **CSV Export:** Export student records for further analysis.
-- **Light and Dark Modes:** Switch between visual themes.
-- **Database Status:** Check the backend's database connection status.
+- **Light and Dark Themes:** Switch between display themes.
+- **Database Status:** View the application's database connection status.
+- **Cloud Database:** Store student records using MongoDB Atlas.
 
 ## Technology Stack
 
 | Component | Technology |
 |---|---|
 | Frontend | React, Vite, JavaScript |
-| Charts | Recharts |
-| Icons | Lucide React |
 | Backend | Python, FastAPI |
 | Database | MongoDB Atlas |
-| Data Source | UCI Student Performance Dataset |
+| Database Driver | PyMongo |
+| Data Processing | Python |
+| Dataset | UCI Student Performance Dataset |
+| Deployment | Render |
+| Version Control | Git, GitHub |
 
-## Architecture
+## System Architecture
 
-```mermaid
-flowchart TD
-    A[User] --> B[React Frontend]
-    B -->|HTTP API Requests| C[FastAPI Backend]
-    C --> D[MongoDB Atlas]
-    D -->|Student Records| C
-    C -->|JSON Responses| B
-    B --> E[Dashboard and Charts]
-```
-
-The React frontend communicates with the FastAPI backend through REST API endpoints. The backend reads and updates student records in MongoDB Atlas and returns JSON responses to the frontend.
-
-## Project Structure
+EduInsight follows a frontend-backend-database architecture.
 
 ```text
-eduinsight/
-├── backend/
-│   ├── main.py
-│   ├── import_data.py
-│   └── .env.example
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   ├── package.json
-│   └── index.html
-├── screenshots/
-│   ├── dashboard.png
-│   ├── analytics.png
-│   └── dark-mode.png
-├── student-mat.csv
-├── .gitignore
-├── README.md
-└── LICENSE
+                  User
+                   |
+                   v
+       React + Vite Frontend
+           (Render Static Site)
+                   |
+                   | HTTP Requests
+                   v
+          FastAPI Backend
+           (Render Web Service)
+                   |
+                   | PyMongo
+                   v
+            MongoDB Atlas
+             (Cloud Database)
 ```
 
-*The structure above describes the intended layout; adjust filenames if your repository differs.*
+### Application Workflow
 
-## Requirements
+1. The user opens the deployed website in a browser.
+2. The React frontend sends HTTP requests to the FastAPI backend.
+3. The backend processes requests and communicates with MongoDB Atlas.
+4. The database returns the requested student records or stored data.
+5. The backend returns responses to the frontend.
+6. The frontend displays dashboard statistics, records, and visual analytics.
+
+## Dataset
+
+The project uses the **UCI Student Performance Dataset**, specifically the Mathematics student performance dataset.
+
+The original dataset contains 395 student records and includes demographic, social, school-related, and academic information.
+
+The application uses student performance data to demonstrate academic analytics, grade distributions, and the identification of students who may need additional support.
+
+**Dataset source:** [UCI Machine Learning Repository — Student Performance](https://archive.ics.uci.edu/dataset/320/student+performance)
+
+Note: The live database may contain additional records created through the application's student management features.
+
+## API Endpoints
+
+The backend exposes REST API endpoints for health checks, dashboard statistics, student records, and analytics.
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/health` | Check backend and database connectivity |
+| GET | `/api/dashboard` | Retrieve dashboard statistics |
+| GET | `/api/students` | Retrieve student records |
+| POST | `/api/students` | Add a student record |
+| DELETE | `/api/students/{student_id}` | Delete a student record |
+| GET | `/api/analytics` | Retrieve academic analytics |
+
+### Example Health Check
+
+Open the following URL in a browser:
+
+https://eduinsight-api.onrender.com/api/health
+
+A successful response looks like this:
+
+```json
+{
+  "status": "connected",
+  "database": "eduinsight"
+}
+```
+
+The response indicates that the backend can connect to the configured MongoDB database.
+
+For request schemas and interactive API testing, visit:
+
+https://eduinsight-api.onrender.com/docs
+
+## Deployment on Render
+
+EduInsight is deployed using two Render services.
+
+### 1. Frontend — Static Site
+
+- **Repository:** `theskymishra/EduInsight`
+- **Root Directory:** `frontend`
+- **Build Command:** `npm install && npm run build`
+- **Publish Directory:** `dist`
+
+Frontend environment variable:
+
+| Variable | Value |
+|---|---|
+| `VITE_API_URL` | `https://eduinsight-api.onrender.com` |
+
+### 2. Backend — Web Service
+
+- **Repository:** `theskymishra/EduInsight`
+- **Root Directory:** `backend`
+- **Build Command:** `pip install -r requirements.txt`
+- **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
+
+Backend environment variable:
+
+| Variable | Description |
+|---|---|
+| `MONGODB_URI` | MongoDB Atlas connection string |
+
+Environment variables should be configured through the Render dashboard.
+
+## Local Installation and Setup
+
+Follow these steps to run EduInsight on your local machine.
+
+### Prerequisites
+
+Install the following:
 
 - Python 3.12 or another version compatible with the backend dependencies
 - Node.js and npm
-- A MongoDB Atlas account or a compatible MongoDB deployment
 - Git
+- A MongoDB Atlas account and database
 
-## Setup and Installation
-
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/theskymishra/EduInsight.git
 cd EduInsight
 ```
 
-### 2. Configure the backend
+### 2. Configure the Backend
+
+Navigate to the backend directory:
 
 ```bash
 cd backend
+```
+
+Create and activate a Python virtual environment on macOS or Linux:
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
+```
+
+Install the dependencies:
+
+```bash
 pip install -r requirements.txt
 ```
 
-Create a `.env` file inside `backend/` containing your MongoDB connection string:
+Create a `.env` file inside the `backend` directory:
 
 ```env
 MONGODB_URI=your_mongodb_atlas_connection_string
 ```
 
-Replace the placeholder with your own connection string. Never commit `.env` or publish database credentials.
+Replace the example value with your actual MongoDB Atlas connection string. Ensure the database user has the required permissions and that network access is configured appropriately.
 
 Start the backend:
 
@@ -113,63 +203,74 @@ Start the backend:
 uvicorn main:app --reload --port 8000
 ```
 
-Backend API documentation is available at:
+The backend will be available at:
 
-`http://localhost:8000/docs`
+http://localhost:8000
 
-### 3. Configure the frontend
+API documentation:
 
-Open a second Terminal window:
+http://localhost:8000/docs
+
+### 3. Configure the Frontend
+
+Open a new terminal and navigate to the project directory:
 
 ```bash
-cd EduInsight/frontend
+cd eduinsight/frontend
+```
+
+Install frontend dependencies:
+
+```bash
 npm install
+```
+
+Create a `.env` file inside `frontend`:
+
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-Open the local URL printed by Vite, usually:
+The frontend will normally be available at:
 
-`http://localhost:5173`
+http://localhost:5173
 
-### 4. Database and dataset
+### 4. Verify the Application
 
-EduInsight uses the MongoDB database `eduinsight` and the `students` collection.
+1. Open the frontend URL in your browser.
+2. Confirm that the dashboard statistics and student records load.
+3. Verify that the database status indicates a successful connection.
+4. Test student creation, deletion, search, and analytics.
 
-The project dataset is based on the UCI Student Performance Dataset. Configure MongoDB before importing data. Run the provided import script only when needed and after checking whether the records have already been imported.
+Keep both the backend and frontend development servers running while using the local application.
 
-## API Endpoints
+## Environment Variables and Security
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/api/health` | Check database connectivity |
-| GET | `/api/dashboard` | Retrieve dashboard statistics |
-| GET | `/api/students` | Retrieve and filter student records |
-| POST | `/api/students` | Add a student record |
-| DELETE | `/api/students/{student_id}` | Delete an eligible student record |
-| GET | `/api/analytics` | Retrieve analytics data |
+- Never commit `.env` files or database credentials to GitHub.
+- Keep `MONGODB_URI` configured as a secret environment variable.
+- Use `.gitignore` to exclude `.env`, virtual environments, `node_modules`, and build output.
+- Configure MongoDB Atlas network access to allow only appropriate connections wherever practical.
+- Do not expose database credentials in frontend code.
+- Review CORS settings before deploying the application to additional domains.
 
-## Dataset Attribution
+## Project Repository
 
-The project uses the **Student Performance** dataset from the UCI Machine Learning Repository.
+GitHub repository:
 
-- Dataset page: https://archive.ics.uci.edu/dataset/320/student+performance
-- Authors: Paulo Cortez and Alice Silva
-- Publication: *Using Data Mining to Predict Secondary School Student Performance* (2008)
-
-Please consult the original dataset page and its licensing terms when redistributing the dataset.
-
-## Security Notes
-
-- Store database credentials in `backend/.env`.
-- Keep `.env`, virtual environments, and `node_modules/` out of version control.
-- Use your own MongoDB Atlas connection string when setting up the project.
+https://github.com/theskymishra/EduInsight
 
 ## Author
 
 **Akash Mishra**
 
-GitHub: https://github.com/theskymishra
+EduInsight was developed as a student performance analytics project to demonstrate the application of web development, database management, REST APIs, and educational data analysis.
 
 ## License
 
-This project is distributed under the MIT License. See [LICENSE](LICENSE) for details.
+No license has been specified for this repository. Unless a license is added, the project should not be assumed to grant permission for unrestricted reuse or redistribution.
